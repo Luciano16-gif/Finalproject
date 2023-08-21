@@ -94,30 +94,7 @@ const handleDelete = async (e) => {
       }
 
     if (data) {
-        var descuento = data.Precio_Descuento;
-        if (descuento === 0.1) {
-        descuento = "Ahorra: 10%";
-        } else if (descuento === 0.2){
-            descuento = "Ahorra: 20%"
-        }else if (descuento === 0.3){
-            descuento = "Ahorra: 30%"
-        } else if (descuento === 0.4){
-            descuento = "Ahorra: 40%"
-        } else if (descuento === 0.5){
-            descuento = "Ahorra: 50%"
-        } else if (descuento === 0.6){
-            descuento = "Ahorra: 60%"
-        } else if (descuento === 0.7){
-            descuento = "Ahorra: 70%"
-        } else if (descuento === 0.8){
-            descuento = "Ahorra: 80%"
-        } else if (descuento === 0.9){
-            descuento = "Ahorra: 90%"
-        } else if (descuento === 1){
-            descuento = "No hay descuento"
-        } else {
-            descuento = "Gratis"
-        };
+        const descuento = `Ahorra: ${Math.round(data.Precio_Descuento * 100)}%`;
         return (
         <div>
             <Testing></Testing>

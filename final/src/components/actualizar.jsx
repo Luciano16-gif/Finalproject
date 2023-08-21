@@ -73,7 +73,7 @@ if (data) {
             <input className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" type="number" value={productData.Precio} name="Precio" placeholder={data.Precio} onChange={handleChange} />
           
             <label className='mt-2' htmlFor="Precio_Descuento">Precio_Descuento:</label>
-            <input className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" type="number" value={productData.Precio_Descuento} name="Precio_Descuento" placeholder={data.Precio_Descuento === 1 ? "No hay descuento" : `${Math.trunc((1 - data.Precio_Descuento) * 100)}%`} onChange={handleChange} />
+            <input className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" type="number" value={productData.Precio_Descuento} name="Precio_Descuento" placeholder={data.Precio_Descuento === 1 ? "No hay descuento" : `${Math.round(data.Precio_Descuento * 100)}%`} onChange={handleChange} />
           
             <label className='mt-2' htmlFor="Tipo_producto">Tipo_producto:</label>
             <select onChange={handleChange} name="Tipo_Producto" placeholder={data.Tipo_Producto} className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" value={productData.Tipo_Producto} id="Tipo_Producto">

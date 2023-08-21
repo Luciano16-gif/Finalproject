@@ -484,8 +484,9 @@ app.post('/makeP', async (req, res) => {
   const { Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias } = req.body;
   try {
     const newProduct = new Products({ Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias });
+    newProduct.Precio_Descuento = newProduct.Precio_Descuento / 100;
     const descuento = newProduct.Precio * newProduct.Precio_Descuento;
-    newProduct.Discounted_Price = (newProduct.Precio - descuento).toFixed(2);
+    {descuento === 0 ? newProduct.Discounted_Price = newProduct.Precio.toFixed(2) : newProduct.Discounted_Price = (newProduct.Precio - descuento).toFixed(2)};
     await newProduct.save();
   } catch (error) {
     console.error(error);
@@ -512,29 +513,37 @@ app.post('/products/:_id', async (req, res) => {
 
   //actualizar un producto
   app.patch("/actp/:_id", async (req, res) => {
+    const { Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias } = req.body;
     try {
-      if (req.body.Precio_Descuento && !req.body.Precio) {
+      const actProduct = ({ Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias });
+
+      if (actProduct.Precio_Descuento && !actProduct.Precio) {
         const product = await Products.findOne({_id: req.params._id});
-        const discount = req.body.Precio_Descuento;
-        const newPrice = product.Precio * discount;
-        req.body.Discounted_Price = (product.Precio - newPrice).toFixed(2);
+        actProduct.Precio_Descuento = actProduct.Precio_Descuento / 100;
+        const newPrice = product.Precio * actProduct.Precio_Descuento;
+        actProduct.Discounted_Price = newPrice === 0 ? product.Precio.toFixed(2) : product.Precio - newPrice;
       };
 
-      if (req.body.Precio && !req.body.Precio_Descuento) {
+      if (actProduct.Precio && !actProduct.Precio_Descuento) {
         const product = await Products.findOne({_id: req.params._id});
-        const precio = req.body.Precio;
-        const newPrice = precio * product.Precio_Descuento;
-        req.body.Discounted_Price = (precio - newPrice).toFixed(2);
+        const precio = actProduct.Precio;
+        const procentaje = product.Precio_Descuento / 100;
+        const newPrice = precio * procentaje;
+        newPrice === 0 ? actProduct.Discounted_Price = precio.toFixed(2) : actProduct.Discounted_Price = (precio - newPrice).toFixed(2);
+        //actProduct.Discounted_Price = (precio - newPrice).toFixed(2);
       };
 
-      if (req.body.Precio && req.body.Precio_Descuento) {
-        const precio = req.body.Precio;
-        const discount = req.body.Precio_Descuento;
-        const newPrice =  precio * discount;
-        req.body.Discounted_Price = (precio - newPrice).toFixed(2);
+      if (actProduct.Precio && actProduct.Precio_Descuento) {
+        const precio = actProduct.Precio;
+        actProduct.Precio_Descuento = actProduct.Precio_Descuento / 100;
+        const newPrice =  precio * actProduct.Precio_Descuento;
+        newPrice === 0 ? actProduct.Discounted_Price = precio.toFixed(2) : actProduct.Discounted_Price = (precio - newPrice).toFixed(2);
+        //actProduct.Discounted_Price = (precio - newPrice).toFixed(2);
       }
       
-      const updatedP = await Products.updateOne({_id: req.params._id}, { $set: req.body });
+      console.log(actProduct.Discounted_Price);
+      console.log(actProduct.Precio_Descuento);
+      const updatedP = await Products.findOneAndUpdate({_id: req.params._id}, { $set: actProduct });
       res.status(200).send(updatedP);
     } catch (error) {
       console.error(error);
