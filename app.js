@@ -75,6 +75,7 @@ const productsSchema = new mongoose.Schema({
     Existencias: {
         type: Number,
         maxLength: 50,
+        min: 0,
         validate: {
             validator: Number.isInteger,
             message: "{VALUE} no es un número entero",

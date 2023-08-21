@@ -75,6 +75,9 @@ const handleDelete = async (e) => {
         });
     }, [id]);
 
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const orderData = {
@@ -85,12 +88,17 @@ const handleDelete = async (e) => {
         const reducir = {
           Existencias: data.Existencias - cantidad,
         };
-        // Llamar a las funciones handlePost y handlePatch
+
+        if (data.Existencias > cantidad) {
+           // Llamar a las funciones handlePost y handlePatch
         handlePost(orderData);
         handlePatch(reducir);
 
         // Recargar la página
-        window.location.reload();
+        window.location.reload(); 
+        } else {
+            alert("No hay suficiente stock");
+        };
       }
 
     if (data) {
