@@ -74,11 +74,18 @@ function closeSession() {
                 </Link> 
               </div>
               <div className="hidden ml-2 bg-gray-800 p-2 rounded-md text-white font-medium text-sm items-center gap-x-4 
-              group-hover:flex hover:bg-slate-700 border-2 border-gray-600">
+              group-hover:flex border-2 border-gray-600">
                 <ul>
-                  <li>
+                  <li className="hover:bg-slate-700 rounded-md">
                     <Link to={"/buscador"}><p>Buscador de productos</p></Link>
                   </li>
+                  { showing && (
+                  <Link to={"makeP"}>
+                    <li className="hover:bg-slate-700 rounded">
+                      Crear un producto
+                    </li>
+                  </Link>
+                  )}
                 </ul>
               </div>
             </div>
@@ -131,7 +138,6 @@ function closeSession() {
                       Crear una compra
                     </li>
                   </Link>
-                  
                   )}
                 </ul>
               </div>

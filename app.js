@@ -5,7 +5,6 @@ const port = 3004; //crear un puerto
 app.use(express.json()) //Poder utilizar formato JSON
 const cors = require('cors') //Libreria para permitir conexiones a la API
 const faker = require('faker');
-const { fi } = require('faker/lib/locales');
 
 
 
@@ -541,8 +540,6 @@ app.post('/products/:_id', async (req, res) => {
         //actProduct.Discounted_Price = (precio - newPrice).toFixed(2);
       }
       
-      console.log(actProduct.Discounted_Price);
-      console.log(actProduct.Precio_Descuento);
       const updatedP = await Products.findOneAndUpdate({_id: req.params._id}, { $set: actProduct });
       res.status(200).send(updatedP);
     } catch (error) {
