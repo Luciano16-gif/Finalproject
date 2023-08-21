@@ -1,0 +1,152 @@
+import "../tailwind.css";
+import { useState, useEffect } from "react";
+import control from "../assets/control.png"
+import { Link } from "react-router-dom";
+
+function Testing () {
+    const [ data, setData ] = useState(null);
+
+    useEffect(() => {
+        fetch("http://localhost:3004/products")
+        .then((res) => res.json())
+        .then((informacion) => setData(informacion))
+        .catch((error) => {
+        console.error('Error:', error);
+        });
+    }, []);
+
+    const [open, setOpen] = useState(true);
+    const Menus = [
+      { title: "Dashboard", src: "Chart_fill" },
+      { title: "Inbox", src: "Chat" },
+      { title: "Accounts", src: "User", gap: true },
+      { title: "Schedule ", src: "Calendar" },
+      { title: "Search", src: "Search" },
+      { title: "Analytics", src: "Chart" },
+      { title: "Files ", src: "Folder", gap: true },
+      { title: "Setting", src: "Setting" },
+    ];
+
+
+if (data){
+    return(
+        
+            <div className="flex">
+    <div className="fixed">
+        <div
+          className={` ${
+            open ? "w-72" : ""
+          } bg-slate-500 h-screen p-5  pt-8 relative duration-300 `}
+          style={{ width: open ? undefined : '85px' }}
+        >
+          <img
+            src={control}
+            className={`absolute cursor-pointer -right-6 top-9 w-7 border-dark-purple
+             border-2 rounded-full  ${!open && "rotate-180"}`}
+            onClick={() => setOpen(!open)}
+          />
+          <div className="flex gap-x-4 items-start text-white font-medium">
+            <h1 className={`cursor-pointer duration-500 ${
+                open && "rotate-[360deg]"
+              }`}>Sidebar</h1>
+            <h1
+              className={`text-white origin-left font-medium text-xl duration-200 ${
+                !open && "scale-0"
+              }`}
+            >
+              Menu
+            </h1>
+          </div>
+          <ul className="pt-6">
+            {Menus.map((Menu, index) => (
+              <li
+                key={index}
+                className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 
+                ${Menu.gap ? "mt-9" : "mt-2"} ${
+                  index === 0 && "bg-light-white"
+                } `}
+              >
+                <span className={`${!open && "hidden"} origin-left duration-200`}>
+                  {Menu.title}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        </div>
+      
+        <div className="h-full min-h-screen bg-gray-300">
+        <div className="grid px-4 grid-cols-1 lg:grid-cols-4 gap-10 py-8 justify-items-center">
+            <div className="flex flex-col bg-white w-full h-full items-center justify-center rounded-2xl">
+                <Link to={"/signup"}>
+                    <p className="hover:text-teal-500 text-2xl underline py-1">Registrarse</p>
+                </Link>
+                <Link to={"/buscador"}>
+                    <p className="hover:text-teal-500 text-2xl underline py-1">Ir al buscador de productos</p>
+                </Link>
+                <Link to={"/clients"}>
+                    <p className="hover:text-teal-500 text-2xl underline py-1">Ir a los clientes</p>
+                </Link>
+                <Link to={"/compras"}>
+                    <p className="hover:text-teal-500 text-2xl underline py-1">Ir a las ventas</p>
+                </Link>
+            </div>
+            {
+                data.map(
+                    (elemento) => {
+                        let descuento = elemento.Precio_Descuento;
+                        if (descuento === 0.1) {
+                        descuento = "Ahorra: 10%";
+                        } else if (descuento === 0.2){
+                            descuento = "Ahorra: 20%"
+                        }else if (descuento === 0.3){
+                            descuento = "Ahorra: 30%"
+                        } else if (descuento === 0.4){
+                            descuento = "Ahorra: 40%"
+                        } else if (descuento === 0.5){
+                            descuento = "Ahorra: 50%"
+                        } else if (descuento === 0.6){
+                            descuento = "Ahorra: 60%"
+                        } else if (descuento === 0.7){
+                            descuento = "Ahorra: 70%"
+                        } else if (descuento === 0.8){
+                            descuento = "Ahorra: 80%"
+                        } else if (descuento === 0.9){
+                            descuento = "Ahorra: 90%"
+                        } else if (descuento === 1){
+                            descuento = "No hay descuento"
+                        };
+                            return(
+                                <Link to={`/products/${elemento._id}`} className="max-h-fit">               
+                                    <div className="flex flex-col rounded-3xl h-full bg-white " key={elemento._id}>
+                                        <img className="py-3 w-2/3 rounded-3xl self-center" src={elemento.Imagen} alt="La imagen no se esta mostrando" />
+                                            <div className="content-center items-center">
+                                                <p className="ps-7">{elemento.Nombre}</p>
+                                                <p className="ps-7 pt-3 pb-2 font-bold text-xl">${elemento.Discounted_Price}</p>
+                                                <p className="ps-7 text-white"><span className="px-1 rounded-md bg-orange-500">{descuento}</span></p>
+                                            </div>
+                                   </div>
+                                </Link>
+                         )
+                      }
+                   )
+               }
+            </div>
+            </div>
+        </div>
+        )
+    };
+}
+export default Testing;
+
+
+    const Menus = [
+      { title: "Dashboard", src: "Chart_fill" },
+      { title: "Inbox", src: "Chat" },
+      { title: "Accounts", src: "User", gap: true },
+      { title: "Schedule ", src: "Calendar" },
+      { title: "Search", src: "Search" },
+      { title: "Analytics", src: "Chart" },
+      { title: "Files ", src: "Folder", gap: true },
+      { title: "Setting", src: "Setting" },
+    ];
