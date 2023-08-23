@@ -106,9 +106,12 @@ function closeSession() {
                     <Link to={"/buscadorClientes"}><p>Buscador de clientes</p></Link>
                   </li>
                   { showing && (
-                  <li className="hover:bg-slate-700 rounded">
-                    Crear un cliente
-                  </li>
+                    <Link to={"makec"}>
+                      <li className="hover:bg-slate-700 rounded cursor-pointer">
+                        Crear un cliente
+                      </li>
+                    </Link>
+                  
                   )}
                 </ul>
               </div>
@@ -133,7 +136,7 @@ function closeSession() {
                     </li>
                   </Link>
                   { showing && (
-                  <Link to={"makec"}>
+                  <Link to={"makecompra"}>
                     <li className="hover:bg-slate-700 rounded">
                       Crear una compra
                     </li>

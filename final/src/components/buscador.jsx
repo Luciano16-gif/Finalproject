@@ -48,7 +48,7 @@ function Search() {
               <p className='self-center'>{products.Nombre}</p> 
               <p className='self-center'>Precio: {products.Discounted_Price}$</p>
               <p className='self-center'>Stock: {products.Existencias}</p>
-              <p className='self-center'>{products.Precio_Descuento === 1 ? "No hay descuento" : `Ahorra: ${Math.trunc((1 - products.Precio_Descuento) * 100)}%`}</p>
+              <p className='self-center'>{`Ahorra: ${Math.trunc(products.Precio_Descuento * 100)}%`}</p>
               <Link className='self-center' to={`/products/${products._id}`}>
                 <p className='self-center underline hover:text-blue-400'>Ir al producto</p>
               </Link>

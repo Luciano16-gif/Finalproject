@@ -5,6 +5,9 @@ const port = 3004; //crear un puerto
 app.use(express.json()) //Poder utilizar formato JSON
 const cors = require('cors') //Libreria para permitir conexiones a la API
 const faker = require('faker');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 
 
@@ -22,9 +25,8 @@ main().catch((err) => {console.log(err)});
 //Estructura de productos
 const productsSchema = new mongoose.Schema({
     Imagen: {
-        type: String,
-        required: true,
-        maxLength: 100,
+        data: Buffer,
+        datatype: String,
     },
 
     Nombre: {
@@ -42,10 +44,10 @@ const productsSchema = new mongoose.Schema({
         match: /^[0-9]*$/,
         maxLength: 20,
         validate: {
-          validator: function(value) {
-            return Number.isFinite(value);
+          validator: function(Precio) {
+            return Number.isFinite(Precio);
           },
-          message: "{VALUE} no es un número"
+          message: `{Precio} no es un número`
         }
     },
 
@@ -61,7 +63,7 @@ const productsSchema = new mongoose.Schema({
     Precio_Descuento: {
         type: Number,
         default: 0,
-        min: 0.1,
+        min: 0,
         max: 1,
         maxLength: 20,
     },
@@ -449,6 +451,23 @@ app.delete("/compra/:_id", async (req, res) => {
     }
 })
 
+//enviar imagen al frontend
+app.get('/image/:id', async (req, res) => {
+  try {
+    // Buscar el producto por ID
+    const product = await Products.findById(req.params.id);
+    if (!product) {
+      return res.status(404).send('Producto no encontrado');
+    };
+
+    //enviar la imagen
+    res.send(product.Imagen.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener la imagen');
+  }
+});
+
 //productos
 app.get('/products', async (req, res) => {
     try{
@@ -479,20 +498,6 @@ app.delete("/producto/:_id", async (req, res) => {
     }
 })
 
-//crear producto
-app.post('/makeP', async (req, res) => {
-  const { Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias } = req.body;
-  try {
-    const newProduct = new Products({ Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias });
-    newProduct.Precio_Descuento = newProduct.Precio_Descuento / 100;
-    const descuento = newProduct.Precio * newProduct.Precio_Descuento;
-    {descuento === 0 ? newProduct.Discounted_Price = newProduct.Precio.toFixed(2) : newProduct.Discounted_Price = (newProduct.Precio - descuento).toFixed(2)};
-    await newProduct.save();
-  } catch (error) {
-    console.error(error);
-  }
-});
-
 //ruta de compras
 app.post('/products/:_id', async (req, res) => {
     try {
@@ -511,11 +516,30 @@ app.post('/products/:_id', async (req, res) => {
     }
   });
 
+//crear producto
+app.post('/makeP', upload.single('Imagen'),async (req, res) => {
+  const { Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias } = req.body;
+  try {
+    const newProduct = new Products({ Imagen: {data: fs.readFileSync(req.file.path), contentType: req.file.mimetype},
+     Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias });
+
+    newProduct.Precio_Descuento = newProduct.Precio_Descuento / 100;
+    const descuento = newProduct.Precio * newProduct.Precio_Descuento;
+    {descuento === 0 ? newProduct.Discounted_Price = newProduct.Precio.toFixed(2) : newProduct.Discounted_Price = 
+      (newProduct.Precio - descuento).toFixed(2)};
+
+
+    await newProduct.save();
+  } catch (error) {
+    console.error(error);
+  }
+});
+
   //actualizar un producto
-  app.patch("/actp/:_id", async (req, res) => {
-    const { Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias } = req.body;
+  app.patch("/actp/:_id", upload.single('Imagen'),async (req, res) => {
+    const { Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias } = req.body;
     try {
-      const actProduct = ({ Imagen, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias });
+      const actProduct = ({ Imagen: {data: fs.readFileSync(req.file.path), contentType: req.file.mimetype}, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias });
 
       if (actProduct.Precio_Descuento && !actProduct.Precio) {
         const product = await Products.findOne({_id: req.params._id});

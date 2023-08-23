@@ -21,7 +21,11 @@ module.exports = {
     "./src/pages/iniciarS.jsx"
   ],
   theme: {
-    extend: {},
+    extend: {
+      aspectRatio: {
+        '16/9' : '16 / 9',
+      }
+    },
   },
   plugins: [],
 }

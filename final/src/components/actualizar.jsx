@@ -8,6 +8,7 @@ function UpdateP() {
     const [data, setData] = useState(null);
     const { id } = useParams();
     const [productData, setProductData] = useState({
+        Imagen: "",
         Nombre: "",
         Precio: "",
         Precio_Descuento: "",
@@ -27,22 +28,29 @@ function UpdateP() {
       verify();
 
         // Crear un objeto con sólo los campos que han cambiado
-        const updatedFields = {};
-        for (const [key, value] of Object.entries(productData)) {
-          if (value !== '') {
-            updatedFields[key] = value;
-          }
-        }
+        //const updatedFields = {};
+        //for (const [key, value] of Object.entries(productData)) {
+        //  if (value !== '') {
+        //    updatedFields[key] = value;
+        //  }
+        //}
   
-    const handleChange = (event) => {
-      const { name, value } = event.target;
+    const handleChange = (e) => {
+      const { name, value } = e.target;
       setProductData((prevData) => ({ ...prevData, [name]: value }));
     };
   
-    const handleSubmit = async (event) => {
-      event.preventDefault();
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append('Imagen', e.target.Imagen.files[0]);
+      formData.append('Nombre', productData.Nombre);
+      formData.append('Precio', productData.Precio);
+      formData.append('Precio_Descuento', productData.Precio_Descuento);
+      formData.append('Tipo_Producto', productData.Tipo_Producto);
+      formData.append('Existencias', productData.Existencias);
       try {
-        await axios.patch(`http://localhost:3004/actp/${id}`, updatedFields);
+        await axios.patch(`http://localhost:3004/actp/${id}`, formData);
         window.location = `/products/${id}`
       } catch (error) {
         console.error(error);
@@ -65,6 +73,10 @@ if (data) {
         <div className='flex items-center justify-center h-full min-h-screen w-screen antialiased bg-slate-200'>
           <form className='flex px-3 py-3 flex-col shadow-xl bg-white shadow-indigo-600 rounded-3xl w-1/3 h-50' onSubmit={handleSubmit}>
             <h1 className='self-center text-2xl'>Actualizar producto</h1>
+
+            <label htmlFor="Imagen">Imagen (jpeg o png)</label>
+            <input type="file" className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" name="Imagen" id="Imagen" 
+            accept="image/jpeg, image/png" onChange={handleChange} />
 
             <label className='mt-2' htmlFor="Nombre">Nombre:</label>
             <input className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" type="text" value={productData.Nombre} name="Nombre" placeholder={data.Nombre} onChange={handleChange} />

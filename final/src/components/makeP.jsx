@@ -14,6 +14,7 @@ function MakeP() {
     Existencias: ""
   });
 
+
   const showing = JSON.parse(localStorage.getItem("userData"));
 
 
@@ -36,12 +37,20 @@ function MakeP() {
   const handleSubmit = async (e) => {
     window.location = "/";
     e.preventDefault();
+    const formData = new FormData();
+      formData.append('Imagen', e.target.Imagen.files[0]);
+      formData.append('Nombre', productData.Nombre);
+      formData.append('Precio', productData.Precio);
+      formData.append('Precio_Descuento', productData.Precio_Descuento);
+      formData.append('Tipo_Producto', productData.Tipo_Producto);
+      formData.append('Existencias', productData.Existencias);
     try {
-        await axios.post('http://localhost:3004/makeP', productData);
+        await axios.post('http://localhost:3004/makeP', formData);
     } catch (error) {
         console.error(error);
     }
   };
+
 
   return (
     <div>
@@ -50,9 +59,13 @@ function MakeP() {
             <form className='flex px-3 py-3 flex-col shadow-xl bg-white shadow-indigo-600 rounded-3xl w-1/3 h-50' onSubmit={handleSubmit}>
                 <h1 className='self-center text-2xl'>Crear Producto</h1>
                 
-                <label htmlFor="Imagen">Imagen (url)</label>
+                <label htmlFor="Imagen">Imagen (jpeg o png)</label>
+                <input type="file" className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" name="Imagen" id="Imagen" 
+                accept="image/jpeg, image/png" onChange={handleChange} />
+
+                {/*<label htmlFor="Imagen">Imagen (url)</label>
                 <input type="url" className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" name="Imagen" id="Imagen" 
-                onChange={handleChange} />
+                onChange={handleChange} />*/}
 
                 <label className='mt-2' htmlFor="Nombre">Nombre:</label>
                 <input type="text" className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" name="Nombre" id="Nombre" 

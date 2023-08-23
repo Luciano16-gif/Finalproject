@@ -91,13 +91,20 @@ const handleDelete = async (e) => {
 
         if (data.Existencias > cantidad) {
            // Llamar a las funciones handlePost y handlePatch
-        handlePost(orderData);
-        handlePatch(reducir);
+          handlePost(orderData);
+          handlePatch(reducir);
 
-        // Recargar la página
-        window.location.reload(); 
+          // Recargar la página
+          window.location.reload(); 
+        } else if (data.Existencias === cantidad) {
+            // Llamar a las funciones handlePost y handlePatch
+            handlePost(orderData);
+            handlePatch(reducir);
+
+            // Recargar la página
+            window.location.reload(); 
         } else {
-            alert("No hay suficiente stock");
+          alert("No hay suficiente stock");
         };
       }
 
@@ -120,7 +127,7 @@ const handleDelete = async (e) => {
             )}
             <div className="grid ps-5 grid-cols-1 lg:grid-cols-3 h-full min-h-screen bg-gray-300 gap-12 py-4 pr-5">
                 <div className="flex items-center h-full">
-                    <img className="py-3 ml-10 w-full rounded-3xl self-center" src={data.Imagen} alt="La imagen no se esta mostrando" />
+                    <img className="py-3 ml-10 w-full rounded-3xl self-center" src={`http://localhost:3004/image/${data._id}`} alt="La imagen no se esta mostrando" />
                 </div>
 
                 <div className="flex flex-col ml-5 bg-white h-2/4 justify-center self-center rounded-3xl text-3xl">
