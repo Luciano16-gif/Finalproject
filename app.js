@@ -553,8 +553,9 @@ app.post('/makeP', upload.single('Imagen'),async (req, res) => {
       actProduct.Tipo_Producto = Tipo_Producto;
       actProduct.Existencias = Existencias;
 
-      if (actProduct.Tipo_Producto === undefined || actProduct.Tipo_Producto === 0) {
-        actProduct.Tipo_Producto = "Físico";
+      if (actProduct.Tipo_Producto === undefined || actProduct.Tipo_Producto === "") {
+        const product = await Products.findOne({ _id: req.params._id });
+        actProduct.Tipo_Producto = product.Tipo_Producto;
       }
 
       if (actProduct.Precio_Descuento && !actProduct.Precio) {

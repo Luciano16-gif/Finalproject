@@ -88,6 +88,7 @@ if (data) {
           
             <label className='mt-2' htmlFor="Tipo_producto">Tipo_producto:</label>
             <select onChange={handleChange} name="Tipo_Producto" placeholder={data.Tipo_Producto} className="border-solid ps-1 border-black border-2 rounded-md bg-gray-300" value={productData.Tipo_Producto} id="Tipo_Producto">
+                <option value={undefined}>Seleccione el tipo al que quiere cambiar</option>
                 <option value="Físico">Físico</option>
                 <option value="Digital">Digital</option>
             </select>

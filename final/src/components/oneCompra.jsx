@@ -22,8 +22,6 @@ function OneCompra() {
         }
     }
 
-    
-    
     useEffect(() => {
         fetch(`http://localhost:3004/compras/${id}`)
         .then((res) => res.json())
