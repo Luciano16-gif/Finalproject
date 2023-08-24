@@ -5,51 +5,44 @@ import "../tailwind.css";
 import Testing from "../pages/testing";
 
 function MakeP() {
-    const [productData, setProductData] = useState({
-    Imagen: "",
-    Nombre: "",
-    Precio: "",
-    Precio_Descuento: "",
-    Tipo_Producto: "",
-    Existencias: ""
-  });
+  const [productData, setProductData] = useState({
+  Imagen: "",
+  Nombre: "",
+  Precio: "",
+  Precio_Descuento: "",
+  Tipo_Producto: "",
+  Existencias: ""
+});
 
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setProductData(prevData => ({
+    ...prevData,
+    [name]: value
+  }));
+};
 
-  const showing = JSON.parse(localStorage.getItem("userData"));
-
-
-  function verify() {
-    if (!showing) {
-      window.location = "/signup";
-      alert("Para acceder se requiere haber iniciado sesión");
-    }};
-  
-    verify();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProductData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    window.location = "/";
-    e.preventDefault();
-    const formData = new FormData();
-      formData.append('Imagen', e.target.Imagen.files[0]);
-      formData.append('Nombre', productData.Nombre);
-      formData.append('Precio', productData.Precio);
-      formData.append('Precio_Descuento', productData.Precio_Descuento);
-      formData.append('Tipo_Producto', productData.Tipo_Producto);
-      formData.append('Existencias', productData.Existencias);
-    try {
+const handleSubmit = async (e) => {
+  //window.location = "/";
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append('Imagen', e.target.Imagen.files[0]);
+  formData.append('Nombre', productData.Nombre);
+  formData.append('Precio', productData.Precio);
+  formData.append('Precio_Descuento', productData.Precio_Descuento);
+  formData.append('Tipo_Producto', productData.Tipo_Producto);
+  formData.append('Existencias', productData.Existencias);
+  try {
+    if (!productData.Imagen || !productData.Nombre || !productData.Precio || !productData.Existencias || productData.Precio_Descuento) {
+        alert("Porfavor rellene todos los campos")
+      } else {
+        window.location = '/'
         await axios.post('http://localhost:3004/makeP', formData);
-    } catch (error) {
-        console.error(error);
-    }
-  };
+      }
+  } catch (error) {
+      console.error(error);
+  }
+};
 
 
   return (

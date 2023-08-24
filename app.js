@@ -72,6 +72,7 @@ const productsSchema = new mongoose.Schema({
         type: String,
         match: /^[a-zA-ZáéíóúÁÉÍÓÚ\s]*$/,
         maxLength: 20,
+        default: "físico",
     },
 
     Existencias: {
@@ -528,6 +529,8 @@ app.post('/makeP', upload.single('Imagen'),async (req, res) => {
     {descuento === 0 ? newProduct.Discounted_Price = newProduct.Precio.toFixed(2) : newProduct.Discounted_Price = 
       (newProduct.Precio - descuento).toFixed(2)};
 
+    newProduct.Tipo_Producto === undefined || newProduct.Tipo_Producto === "" || Array.isArray(newProduct.Tipo_Producto)  ? newProduct.Tipo_Producto = "Físico" :
+    newProduct.Tipo_Producto = newProduct.Tipo_Producto;
 
     await newProduct.save();
   } catch (error) {
@@ -536,10 +539,23 @@ app.post('/makeP', upload.single('Imagen'),async (req, res) => {
 });
 
   //actualizar un producto
-  app.patch("/actp/:_id", upload.single('Imagen'),async (req, res) => {
+  app.patch("/actp/:_id", upload.single('Imagen'), async (req, res) => {
     const { Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias } = req.body;
     try {
-      const actProduct = ({ Imagen: {data: fs.readFileSync(req.file.path), contentType: req.file.mimetype}, Nombre, Precio, Discounted_Price, Precio_Descuento, Tipo_Producto, Existencias });
+      const actProduct = {};
+      if (req.file) {
+        actProduct.Imagen = { data: fs.readFileSync(req.file.path), contentType: req.file.mimetype };
+      }
+      actProduct.Nombre = Nombre;
+      actProduct.Precio = Precio;
+      actProduct.Discounted_Price = Discounted_Price;
+      actProduct.Precio_Descuento = Precio_Descuento;
+      actProduct.Tipo_Producto = Tipo_Producto;
+      actProduct.Existencias = Existencias;
+
+      if (actProduct.Tipo_Producto === undefined || actProduct.Tipo_Producto === 0) {
+        actProduct.Tipo_Producto = "Físico";
+      }
 
       if (actProduct.Precio_Descuento && !actProduct.Precio) {
         const product = await Products.findOne({_id: req.params._id});

@@ -150,3 +150,10 @@ export default Testing;
       { title: "Files ", src: "Folder", gap: true },
       { title: "Setting", src: "Setting" },
     ];
+
+
+git init
+git add .
+git commit -m "first commit"
+git remote add origin https://github.com/NOMBRE_USUARIO/NOMBRE_PROYECTO.git
+git push -u origin master

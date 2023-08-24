@@ -8,7 +8,6 @@ function UpdateP() {
     const [data, setData] = useState(null);
     const { id } = useParams();
     const [productData, setProductData] = useState({
-        Imagen: "",
         Nombre: "",
         Precio: "",
         Precio_Descuento: "",
@@ -27,13 +26,13 @@ function UpdateP() {
     
       verify();
 
-        // Crear un objeto con sólo los campos que han cambiado
-        //const updatedFields = {};
-        //for (const [key, value] of Object.entries(productData)) {
-        //  if (value !== '') {
-        //    updatedFields[key] = value;
-        //  }
-        //}
+         //Crear un objeto con sólo los campos que han cambiado
+        const updatedFields = {};
+        for (const [key, value] of Object.entries(productData)) {
+          if (value !== '') {
+            updatedFields[key] = value;
+          };
+        };
   
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -43,15 +42,15 @@ function UpdateP() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       const formData = new FormData();
-      formData.append('Imagen', e.target.Imagen.files[0]);
-      formData.append('Nombre', productData.Nombre);
-      formData.append('Precio', productData.Precio);
-      formData.append('Precio_Descuento', productData.Precio_Descuento);
-      formData.append('Tipo_Producto', productData.Tipo_Producto);
-      formData.append('Existencias', productData.Existencias);
+      if (e.target.Imagen.files[0]) {
+        formData.append('Imagen', e.target.Imagen.files[0]);
+      }
+      for (const [key, value] of Object.entries(updatedFields)) {
+        formData.append(key, value);
+      }
       try {
         await axios.patch(`http://localhost:3004/actp/${id}`, formData);
-        window.location = `/products/${id}`
+        window.location = `/products/${id}`;
       } catch (error) {
         console.error(error);
       }
